@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sns="http://www.mulesoft.org/schema/mule/sns" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/sns http://www.mulesoft.org/schema/mule/sns/current/mule-sns.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="adfdfb12-5b08-40cc-9841-cb8168126dd9" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<sns:config name="Amazon_SNS_configuration" doc:name="Amazon SNS configuration" doc:id="845a7990-8ee4-45b5-a1cc-7704b96c8040" >
+		<sns:basic-connection testTopic="arn:aws:sns:us-east-1:128979844418:Mule-Errors" accessKey="AKIAJ3SQCXVHFA3C6UQA" secretKey="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" />
+	</sns:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="4c404cea-ec7d-443f-9603-e6361adb07b0" file="jenkins.properties" />
+	<flow name="us-bayer-aws-sns-sys-apiFlow" doc:id="f5742b88-ca20-4af5-bc24-421c4045e8a3" >
+		<http:listener doc:name="Listener" doc:id="b754fc00-16f4-41c3-9392-7afa4030dcb4" config-ref="HTTP_Listener_config" path="/aws"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="8cc8cac7-0f81-4359-b974-083e965646fd" mimeType="text/plain"/>
+		<sns:publish doc:name="Publish" doc:id="651eadd1-5079-4929-835e-7f909d0f893f" config-ref="Amazon_SNS_configuration" topicArn="arn:aws:sns:us-east-1:128979844418:Mule-Errors" subject="Mule Error Logs">
+		</sns:publish>
+		<logger level="INFO" doc:name="Logger" doc:id="e89378b8-8216-4904-85d6-7ca3e13b1bae" message="Message: #[payload]"/>
+	</flow>
+	
+</mule>
