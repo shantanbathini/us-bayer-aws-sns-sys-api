@@ -98,6 +98,9 @@
 		            <password>${anypoint.password}</password>
 		            <applicationName>${name}</applicationName>
 		            <environment>${anypoint.environment}</environment>
+			   <objectStoreV2>true</objectStoreV2>
+		           <workers>1</workers>
+		           <workerType>micro</workerType>
 		            <properties>
 		                <key>value</key>
 		            </properties>
